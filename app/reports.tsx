@@ -1,32 +1,54 @@
-import { StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Platform, StyleSheet, Text, View } from "react-native";
+import { WebView } from "react-native-webview";
+
 import { useStation } from "../context/StationContext";
+import { getRevenueData } from "../services/dataResolver";
 
 export default function Reports() {
   const { station } = useStation();
 
+  // ✅ GUARD — must come first
+  if (!station) {
+    return <ActivityIndicator size="large" />;
+  }
+
+  // ✅ SAFE: station is guaranteed here
+  const data = getRevenueData(station, "reports");
+
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>{station} / Reports</Text>
-      <Text style={styles.text}>
-        Sample template for revenue and financial reports.
+      <Text style={styles.header}>
+        {station} / Revenue / Reports
       </Text>
+
+      {data?.type === "excel" && (
+  Platform.OS === "web" ? (
+    <iframe
+      src={data.url}
+      style={{
+        width: "100%",
+        height: "100vh",
+        border: "none",
+      }}
+    />
+  ) : (
+    <WebView
+      source={{ uri: data.url }}
+      startInLoadingState
+      renderLoading={() => <ActivityIndicator size="large" />}
+    />
+  )
+)}
+
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 24,
-    backgroundColor: "#ffffff",
-  },
+  container: { flex: 1 },
   header: {
-    fontSize: 20,
+    padding: 12,
+    fontSize: 18,
     fontWeight: "600",
-    marginBottom: 16,
-  },
-  text: {
-    fontSize: 16,
-    color: "#374151",
   },
 });

@@ -24,7 +24,7 @@ export const DATA_SOURCES: Record<
       },
       reports: {
         type: "excel",
-        url: "https://example.com/tadong/reports.xlsx",
+        url: "https://docs.google.com/spreadsheets/d/15phl8-LyPhZyX9vgelL6dwIvjttMM8fDpp3GpTLMewQ/edit?usp=sharing",
       },
     },
     maintenance: {
